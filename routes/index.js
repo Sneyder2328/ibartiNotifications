@@ -12,20 +12,22 @@ const options = {
     }
 };
 
-async function sendNotification(type, content, tokenIdReceiver) {
+async function sendNotification(title, description, photo, channel, tokenIdReceiver) {
     return await axios.post('https://fcm.googleapis.com/fcm/send', {
-        data: {type, content},
+        data: {title, description, photo, channel},
         to: tokenIdReceiver,
         priority: 'high'
     }, options);
 }
 
 router.post('/notifications', async function (req, res, next) {
-    const type = req.body.type;
-    const content = req.body.content;
+    const title = req.body.title;
+    const description = req.body.description;
     const receiverTokenId = req.body.receiverTokenId;
+    const photo = req.body.photo;
+    const channel = req.body.channel;
 
-    let result = await sendNotification(type, content, receiverTokenId);
+    let result = await sendNotification(title, description, photo, channel, receiverTokenId);
     res.send(result.data);
 });
 
